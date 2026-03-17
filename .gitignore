@@ -6,3 +6,18 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+# Allure reports
+allure-results/
+allure-report/
+
+# Playwright reports
+playwright-report/
+test-results/
+
+# Environment files
+.env
+.env.local
+
+# IDE settings
+.idea/
+.vscode/
