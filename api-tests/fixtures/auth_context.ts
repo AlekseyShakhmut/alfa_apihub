@@ -17,7 +17,7 @@ export const test = base.extend<AuthFixtures>({
     testUser: async ({}, use) => {
         const user = {
             email: faker.internet.email(),
-            password: "12345zA!",
+            password: faker.internet.password() + "A1!",
             role: "ADMIN",
             username: faker.internet.userName().toLowerCase(),
         };
@@ -27,13 +27,13 @@ export const test = base.extend<AuthFixtures>({
     // Фикстура с токеном (регистрация + логин)
     authToken: async ({ request, testUser }, use) => {
         // 1. Регистрируем пользователя
-        const registerRes = await request.post('/api/v1/users/register', {
+        const registerRes = await request.post('users/register', {
             data: testUser
         });
         expect(registerRes.status()).toBe(201);
 
         // 2. Логинимся и получаем токен
-        const loginRes = await request.post('/api/v1/users/login', {
+        const loginRes = await request.post('users/login', {
             data: {
                 password: testUser.password,
                 username: testUser.username

@@ -9,12 +9,12 @@ test.describe('Получение списка случайных продукт
 
     test('Получить весь список фиктивных товаров и сохранить список в файл', async ({ request }) => {
         // Узнаем общее количество продуктов с минимальной нагрузкой
-        const metaResponse = await request.get('/api/v1/public/randomproducts?limit=1',)
+        const metaResponse = await request.get('public/randomproducts?limit=1',)
         const totalItems = (await metaResponse.json()).data.totalItems;
 
 
         // Запрашиваем ВСЕ продукты
-        const response = await request.get('api/v1/public/randomproducts', {
+        const response = await request.get('public/randomproducts', {
             params: {
                 limit: totalItems
             }

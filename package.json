@@ -2,7 +2,7 @@
   "name": "freeapi-tests",
   "version": "1.0.0",
   "scripts": {
-    "test:allure": "npm test; allure generate allure-results -o allure-report --clean; allure open allure-report",
+    "test:allure": "rm -rf allure-results && npx playwright test && allure generate allure-results -o allure-report --clean && allure open allure-report",
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
     "test:debug": "npx playwright test --debug",

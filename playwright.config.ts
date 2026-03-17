@@ -16,7 +16,7 @@ export default defineConfig({
     ['list'] // прогресс в консоли
   ],
   use: {
-    baseURL: 'https://api.freeapi.app',
+    baseURL: 'https://api.freeapi.app/api/v1/',
     trace: 'retain-on-failure',
     // screenshot: 'only-on-failure',
     extraHTTPHeaders: {

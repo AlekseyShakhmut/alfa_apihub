@@ -7,19 +7,19 @@ test.describe('Регистрация и авторизация', () => {
         // 1. Генерируем данные нового пользователя
         const user = {
             email: faker.internet.email().toLowerCase(),
-            password: "test@555",
+            password: faker.internet.password() + "A1!",
             role: "ADMIN",
             username: faker.internet.userName().toLowerCase()
         };
 
         // 2. Регистрируем пользователя
-        const registerRes = await request.post('/api/v1/users/register', {
+        const registerRes = await request.post('users/register', {
             data: user
         });
         expect(registerRes.status()).toBe(201);
 
         // 3. Логинимся и получаем токен
-        const loginRes = await request.post('/api/v1/users/login', {
+        const loginRes = await request.post('users/login', {
             data: {
                 email: user.email,
                 password: user.password
@@ -31,7 +31,7 @@ test.describe('Регистрация и авторизация', () => {
         const token = loginData.data.accessToken;
 
         // 4. Используем токен для защищенного запроса
-        const protectedRes = await request.get('/api/v1/users/current-user', {
+        const protectedRes = await request.get('users/current-user', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -43,7 +43,7 @@ test.describe('Регистрация и авторизация', () => {
     });
     // test('GET /current-user без токена - ожидаем 401', async ({ request }) => {
     //     // Просто запрос без заголовка Authorization и проверка, что эндпоинт защищен
-    //     const response = await request.get('/api/v1/users/current-user');
+    //     const response = await request.get('users/current-user');
     //
     //     expect(response.status()).toBe(401);
     // });

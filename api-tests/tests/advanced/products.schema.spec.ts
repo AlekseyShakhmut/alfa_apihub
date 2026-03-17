@@ -15,7 +15,7 @@ test.describe('JSON Schema валидация', () => {
     test.beforeAll(async ({ request, authToken }) => {
         // Создаем категорию один раз для всех тестов (если их будет несколько)
         const categoryData = generateCategory();
-        const categoryRes = await request.post('/api/v1/ecommerce/categories', {
+        const categoryRes = await request.post('ecommerce/categories', {
             data: categoryData,
             headers: { Authorization: `Bearer ${authToken}` }
         });
@@ -32,7 +32,7 @@ test.describe('JSON Schema валидация', () => {
             subImages: ['sub1.jpeg', 'sub2.jpg', 'sub3.jpg']
         });
 
-        const createRes = await request.post('/api/v1/ecommerce/products', {
+        const createRes = await request.post('ecommerce/products', {
             multipart: formData,
             headers: { Authorization: `Bearer ${authToken}` }
         });
@@ -40,7 +40,7 @@ test.describe('JSON Schema валидация', () => {
         const { data: product } = await createRes.json();
 
         // 2. Получаем продукт по ID
-        const response = await request.get(`/api/v1/ecommerce/products/${product._id}`);
+        const response = await request.get(`ecommerce/products/${product._id}`);
         expect(response.status()).toBe(200);
 
         const responseBody = await response.json();
@@ -49,12 +49,6 @@ test.describe('JSON Schema валидация', () => {
         // 3. Валидируем схему
         const validate = ajv.compile(productSchema);
         const valid = validate(receivedProduct);
-
-        // if (!valid) {
-        //     console.log('Ошибки валидации схемы:');
-        //     console.log(JSON.stringify(validate.errors, null, 2));
-        //     console.log('Полученный объект:', JSON.stringify(receivedProduct, null, 2));
-        // }
 
         expect(valid).toBe(true);
     });

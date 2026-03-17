@@ -8,7 +8,7 @@ test.describe('Негативные тесты для продуктов', () =>
     test('GET /products/{id} с несуществующим ID - ожидаем 404', async ({ request }) => {
         const invalidId = "000000000000000000000000";  // несуществующий ID
 
-        const response = await request.get(`/api/v1/ecommerce/products/${invalidId}`);
+        const response = await request.get(`ecommerce/products/${invalidId}`);
 
         expect(response.status()).toBe(404);
     });
@@ -19,7 +19,7 @@ test.describe('Негативные тесты для продуктов', () =>
             price: faker.commerce.price()
         };
 
-        const response = await request.post('/api/v1/ecommerce/products', {
+        const response = await request.post('ecommerce/products', {
             data: productData
             // Без Authorization header
         });
@@ -36,7 +36,7 @@ test.describe('Негативные тесты для продуктов', () =>
             price: 40
         };
 
-        const response = await request.post('/api/v1/ecommerce/products', {
+        const response = await request.post('ecommerce/products', {
             multipart: invalidData,
             headers: { Authorization: `Bearer ${authToken}`,
                         "Content-Type": 'application/json'}
@@ -50,7 +50,7 @@ test.describe('Негативные тесты для продуктов', () =>
         formData.append('price', 'сто');
 
 
-        const response = await request.post('/api/v1/ecommerce/products', {
+        const response = await request.post('ecommerce/products', {
             multipart: formData,
             headers: { Authorization: `Bearer ${authToken}` }
         });
