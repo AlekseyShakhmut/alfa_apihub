@@ -21,3 +21,6 @@ test-results/
 # IDE settings
 .idea/
 .vscode/
+
+# macOS system files
+.DS_Store
