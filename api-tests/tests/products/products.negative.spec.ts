@@ -1,8 +1,6 @@
-// tests/products/products.negative.spec.ts
 import { test, expect } from '../../fixtures/auth_context';  // для тестов с токеном
 import { faker } from '@faker-js/faker';
 import {createBaseProductFormData, createProductFormData} from "../../utils/form_data_helper";
-import {generateCategory, generateProduct} from "../../utils/data_generator";
 
 test.describe('Негативные тесты для продуктов', () => {
 
