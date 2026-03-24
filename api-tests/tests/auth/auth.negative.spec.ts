@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { faker } from '@faker-js/faker';
 import {generateValidUser} from "../../utils/user_helper";
 
 test.describe('Авторизация негативные тесты', () => {
@@ -39,7 +38,7 @@ test.describe('Авторизация негативные тесты', () => {
     test('Проверка авторизации без обязательного поля username', async ({request}) => {
         const auth_user = await request.post('users/login', {
             data: {
-                password: process.env.ADMIN_USER_PASSWORD
+                password: process.env.ADMIN_USER_PASSWORD!
             }
         })
         expect(auth_user.status()).toBe(400);
@@ -49,7 +48,7 @@ test.describe('Авторизация негативные тесты', () => {
     test('Проверка авторизации c невалидным username', async ({request}) => {
         const auth_user = await request.post('users/login', {
             data: {
-                password: process.env.ADMIN_USER_PASSWORD,
+                password: process.env.ADMIN_USER_PASSWORD!,
                 username: 'aaaaaa'
             }
         })
