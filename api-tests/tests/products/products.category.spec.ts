@@ -28,7 +28,6 @@ test.describe.serial("Проверка информации о товаре на
             mainImage: 'main.jpg',
             subImages: ['sub1.jpeg', 'sub2.jpg', 'sub3.jpg']
         });
-
             const responseProduct = await request.post('ecommerce/products', {
                 multipart: formData,
                 headers: {'Authorization': `Bearer ${authToken}`}
@@ -40,6 +39,27 @@ test.describe.serial("Проверка информации о товаре на
               productName = bodyProduct.data.name
               productPrice = bodyProduct.data.price
     })
+    test.afterAll('Удаление категории и продукта', async ({request, authToken}) => {
+        const responseProduct = await request.delete(`ecommerce/products/${productId}`,{
+            headers: {'Authorization': `Bearer ${authToken}`}
+        });
+        expect([200, 204]).toContain(responseProduct.status());
+        const bodyProduct = await responseProduct.json();
+        expect(bodyProduct.message).toBe('Product deleted successfully')
+
+        const checkProduct = await request.get(`ecommerce/products/${productId}`);
+        expect(checkProduct.status()).toBe(404);
+
+        const responseCategory = await request.delete(`ecommerce/categories/${categoryId}`,{
+            headers: {'Authorization': `Bearer ${authToken}`}
+        });
+        expect([200, 204]).toContain(responseCategory.status());
+        const bodyCategory = await responseCategory.json();
+        expect(bodyCategory.message).toBe('Category deleted successfully')
+
+        const checkCategory = await request.get(`ecommerce/categories/${categoryId}`);
+        expect(checkCategory.status()).toBe(404);
+    })
     test('Проверка информации о товаре внутри категории', async ({request}) => {
         const response = await request.get(`ecommerce/products/category/${categoryId}`,{
             params: {
@@ -50,15 +70,19 @@ test.describe.serial("Проверка информации о товаре на
              expect(response.status()).toBe(200);
              const body = await response.json();
 
+             expect(body.data.totalProducts).toBe(1);
+             expect(body.data.totalPages).toBe(1);
              expect(body.data.limit).toBe(1);
              expect(body.data.page).toBe(1);
              expect(body.message).toBe('Category products fetched successfully');
+
+             expect(body.data.products).toBeInstanceOf(Array);
+             expect(body.data.products.length).toBe(1);
 
              expect(body.data.category._id).toBe(categoryId);
              expect(body.data.category.name).toBe(categoryName);
              expect(body.data.products[0]._id).toBe(productId);
              expect(body.data.products[0].name).toBe(productName);
              expect(body.data.products[0].price).toBe(productPrice);
-
     });
 });

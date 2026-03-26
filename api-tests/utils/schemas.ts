@@ -64,3 +64,95 @@ export const userSchema = {
         role: { type: 'string' }
     }
 };
+
+export const categoryProductsSchema = {
+    type: 'object',
+    required: ['statusCode', 'data', 'message', 'success'],
+    properties: {
+        statusCode: { type: 'number' },
+        success: { type: 'boolean' },
+        message: { type: 'string' },
+        data: {
+            type: 'object',
+            required: ['products', 'totalProducts', 'limit', 'page', 'totalPages', 'category'],
+            properties: {
+                // Пагинация (бизнес-поля)
+                totalProducts: { type: 'number' },
+                limit: { type: 'number' },
+                page: { type: 'number' },
+                totalPages: { type: 'number' },
+                serialNumberStartFrom: { type: 'number' },
+                hasPrevPage: { type: 'boolean' },
+                hasNextPage: { type: 'boolean' },
+                prevPage: { type: ['number', 'null'] },
+                nextPage: { type: ['number', 'null'] },
+
+                // Категория (бизнес-данные)
+                category: {
+                    type: 'object',
+                    required: ['_id', 'name'],
+                    properties: {
+                        _id: { type: 'string' },
+                        name: { type: 'string' }
+                    }
+                },
+
+                // Список продуктов
+                products: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        required: ['_id', 'name', 'price', 'category'],
+                        properties: {
+                            _id: { type: 'string' },
+                            name: { type: 'string' },
+                            price: { type: 'number' },
+                            category: { type: 'string' },
+                            description: { type: 'string' },
+                            stock: { type: 'number' },
+                            mainImage: {
+                                type: 'object',
+                                properties: {
+                                    url: { type: 'string' },
+                                    localPath: { type: 'string' },
+                                    _id: { type: 'string' }
+                                }
+                            },
+                            subImages: { type: 'array' }
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+
+export const deleteProductResponseSchema = {
+    type: 'object',
+    required: ['statusCode', 'data', 'message', 'success'],
+    properties: {
+        statusCode: { type: 'number' },
+        success: { type: 'boolean' },
+        message: { type: 'string' },
+        data: {
+            type: 'object',
+            required: ['deletedProduct'],
+            properties: {
+                deletedProduct: {
+                    type: 'object',
+                    required: ['_id', 'name', 'price', 'category'],
+                    properties: {
+                        _id: { type: 'string' },
+                        name: { type: 'string' },
+                        price: { type: 'number' },
+                        category: { type: 'string' },
+                        description: { type: 'string' },
+                        stock: { type: 'number' },
+                        mainImage: { type: 'object' },
+                        subImages: { type: 'array' }
+                    }
+                }
+            }
+        }
+    }
+};
