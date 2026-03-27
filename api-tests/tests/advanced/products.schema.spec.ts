@@ -3,7 +3,12 @@ import {generateCategory, generateNewPrice, generateProduct} from '../../utils/d
 import { createImageBlob } from '../../utils/image_helper';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import {categoryProductsSchema, deleteProductResponseSchema, productSchema} from '../../utils/schemas';
+import {
+    categoryProductsSchema,
+    deleteProductResponseSchema,
+    productSchema,
+    removeSubImageResponseSchema
+} from '../../utils/schemas';
 import {createPriceUpdateFormData, createProductFormData} from "../../utils/form_data_helper";
 
 const ajv = new Ajv();
@@ -13,6 +18,7 @@ test.describe.serial('JSON Schema валидация', () => {
     let categoryId: string;
     let productId: string;
     let createdProduct: any;
+    let subImageId: string;
 
     test.beforeAll(async ({ request, authToken }) => {
         // Создаем категорию один раз
@@ -38,13 +44,14 @@ test.describe.serial('JSON Schema валидация', () => {
         });
         expect(createRes.status()).toBe(201);
 
-        const responseBody = await createRes.json();
-        createdProduct = responseBody.data;
+        const productBody = await createRes.json();
+        createdProduct = productBody.data;
         productId = createdProduct._id;
+        subImageId = createdProduct.subImages[0]?._id;
 
         // Валидация схемы ответа POST
         const validate = ajv.compile(productSchema);
-        const valid = validate(responseBody.data);
+        const valid = validate(createdProduct);
         expect(valid).toBe(true);
     });
 
@@ -93,6 +100,19 @@ test.describe.serial('JSON Schema валидация', () => {
         const validate = ajv.compile(categoryProductsSchema);
         const valid = validate(bodyCategoryProduct);
         expect(valid).toBe(true);
+    });
+    test(' PATCH /products/remove/subimage/{productId}/{subImageId}- ответ должен соответствовать схеме', async ({ request, authToken }) => {
+        const responseDelete = await request.patch(`ecommerce/products/remove/subimage/${productId}/${subImageId}`, {
+            headers: { Authorization: `Bearer ${authToken}` }
+        });
+        expect(responseDelete.status()).toBe(200);
+
+        const deleteImageBody = await responseDelete.json();
+
+        const validate = ajv.compile(removeSubImageResponseSchema);
+        const valid = validate(deleteImageBody);
+        expect(valid).toBe(true);
+
     });
     test('DELETE /products/{id} - ответ должен соответствовать схеме', async ({ request, authToken }) => {
         const response = await request.delete(`ecommerce/products/${productId}`, {

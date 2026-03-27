@@ -156,3 +156,48 @@ export const deleteProductResponseSchema = {
         }
     }
 };
+
+export const removeSubImageResponseSchema = {
+    type: 'object',
+    required: ['statusCode', 'data', 'message', 'success'],
+    properties: {
+        statusCode: { type: 'number' },
+        success: { type: 'boolean' },
+        message: { type: 'string' },
+        data: {
+            type: 'object',
+            required: ['_id', 'name', 'price', 'category', 'subImages'],
+            properties: {
+                _id: { type: 'string' },
+                name: { type: 'string' },
+                price: { type: 'number' },
+                category: { type: 'string' },
+                description: { type: 'string' },
+                stock: { type: 'number' },
+                owner: { type: 'string' },
+                createdAt: { type: 'string', format: 'date-time' },
+                updatedAt: { type: 'string', format: 'date-time' },
+                mainImage: {
+                    type: 'object',
+                    properties: {
+                        url: { type: 'string' },
+                        localPath: { type: 'string' },
+                        _id: { type: 'string' }
+                    }
+                },
+                subImages: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        required: ['url', 'localPath', '_id'],
+                        properties: {
+                            url: { type: 'string' },
+                            localPath: { type: 'string' },
+                            _id: { type: 'string' }
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
